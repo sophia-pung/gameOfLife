@@ -1,1 +1,1 @@
-Conway's immigration game of life for the Atlas Fellowship.
+Conway's immigration game of life.
