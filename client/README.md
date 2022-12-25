@@ -7,7 +7,6 @@ colored cells are alive.
 gray cells are dead. 
 
 rules: 
-
 if a cell has no neighbors, on the next turn it dies. 
 
 if it has one neighbor, on the next turn it dies. 
@@ -24,7 +23,7 @@ goal: convert the black bordered cell of oponent color to your color cell.
 
 <div class="embed-container">
     <iframe width="640" height="390" 
-    src="https://youtu.be/7920UmkmMgs" 
+    src="https://j.gifs.com/16Nqvq.gif" 
     frameborder="0" allowfullscreen></iframe>
 </div>
 
