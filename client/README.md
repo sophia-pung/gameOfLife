@@ -22,7 +22,7 @@ more than three, no more cells will form.
 goal: convert the black bordered cell of oponent color to your color cell. 
 
 <p align="center">
-    <img width="1000" src="https://j.gifs.com/16Nqvq.gif" alt="Gameplay Preview">
+    <img width="1000" src="https://github.com/sophia-pung/gameOfLife/blob/main/client/public/demo.gif" alt="Gameplay Preview">
 </p>
 
 red win demo:
