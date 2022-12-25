@@ -1,1 +1,39 @@
-Conway's immigration game of life.
+Conway's immigration game of life:
+
+this game progresses in turns. 
+
+colored cells are alive. 
+
+gray cells are dead. 
+
+rules: 
+
+if a cell has no neighbors, on the next turn it dies. 
+
+if it has one neighbor, on the next turn it dies. 
+
+if it has two or three live neighbors, it stays alive on the next turn.
+
+if it has more than three live neighbors, it dies. 
+
+on any given turn, if a cell has three live neighbors, on the next turn it will become alive. 
+
+more than three, no more cells will form.
+
+goal: convert the black bordered cell of oponent color to your color cell. 
+
+<div class="embed-container">
+    <iframe width="640" height="390" 
+    src="https://youtu.be/7920UmkmMgs" 
+    frameborder="0" allowfullscreen></iframe>
+</div>
+
+red win demo:
+<p align="center">
+    <img width="1000" src="https://github.com/sophia-pung/gameOfLife/blob/main/client/public/redWinDemo.mp4" alt="Gameplay Preview">
+</p>
+
+blue win demo:
+<p align="center">
+    <img width="1000" src="https://github.com/sophia-pung/gameOfLife/blob/main/client/public/blueWinDemo.mp4" alt="Gameplay Preview">
+</p>
