@@ -6,16 +6,21 @@ import Item from "@mui/material/Grid";
 import "./App.css";
 import { jsx } from "@emotion/react";
 import  {useState} from "react";
+//import _ from lodash to clone grid
 import _ from 'lodash';
-const HEIGHT = 10;
-const WIDTH = 20; 
+import { blue } from "@mui/material/colors";
+const HEIGHT = 11;
+const WIDTH = 22; 
 
-//i > height, j > width 
+//the coordinates are (height, width) >> [i: height, j: width]
 
 enum Color {
   GRAY='gray',
   BLUE='blue',
   RED='red',
+  GREEN='green',
+  LIGHTGRAY='lightgray',
+  BLACK='black'
 }
 
 enum State {
@@ -23,7 +28,20 @@ enum State {
   DEAD = 'dead'
 }
 
-class Cell {
+class BlueCell {
+  color: Color;
+  state: State;
+  numAlive: number; // num neighbors of cell alive
+  numBlue: number;
+  numRed: number;
+  
+  constructor() {
+    this.color = Color.LIGHTGRAY;
+    this.state = State.DEAD;
+  }
+}
+
+class RedCell {
   color: Color;
   state: State;
   numAlive: number; // num neighbors of cell alive
@@ -36,40 +54,7 @@ class Cell {
   }
 }
 
-const gridStyles = {
-  backgroundColor: "gray",
-  marginLeft: "auto",
-  marginRight: "auto",
-  paddingRight: 1,
-  paddingBottom: 1
-};
-
-// function redClick(cellColor) {
-//   console.log("I clicked the red button")
-//   if (cellColor === Redcellcolor.GRAY) {
-//     cellColor = Redcellcolor.RED;
-//     blueClick('blue');
-//   } else if (cellColor === Redcellcolor.RED) {
-//     cellColor = Redcellcolor.GRAY;
-//   }
-//   //default to blue 
-//   //if red button === gray > turn red, blue button turn gray
-//   //else if red button === red > turn gray, blue button turn blue
-// }
-
-// function blueClick(cellColor) {
-//   console.log("I clicked the blue button")
-//   if (cellColor === Bluecellcolor.GRAY) {
-//     cellColor = Bluecellcolor.BLUE;
-//     redClick('red');
-//   } else if (cellColor === Bluecellcolor.BLUE) {
-//     cellColor = Bluecellcolor.GRAY;
-//   }
-// }
-
 function getNeighbors(grid, i, j) {
-  const cell = grid[i][j];
-  // console.log("cell: ", cell);
   const N = i > 0 ? grid[i - 1][j] : null;
   const S = i < HEIGHT - 1 ? grid[i + 1][j] : null;
   const W = j > 0 ? grid[i][j - 1] : null;
@@ -79,19 +64,28 @@ function getNeighbors(grid, i, j) {
   const SW = i < HEIGHT - 1 && j > 0 ? grid[i + 1][j - 1] : null;
   const SE = i < HEIGHT - 1 && j < WIDTH - 1 ? grid[i + 1][j + 1] : null;
   const neighbors = [N, S, W, E, NW, NE, SW, SE];
-  // console.log("hey! my neighbord are", neighbors);
   return neighbors.filter((neighbor) => neighbor !== null);
 }
 
 const ConwayGrid = (props) => {
+  const blueGoalCellY = 5; //5, 2
+  const blueGoalCellX = 2;
+  const redGoalCellY = 5; //5, 19
+  const redGoalCellX = 19;
+
   const setupGrid = () => {
     const grid : Cell[][]= []
     for(let i=0; i < HEIGHT; i++) {
       grid.push([])
       for(let j = 0; j< WIDTH; j++) {
-          grid[i].push( new Cell() )
+          if(j<11){
+            grid[i].push( new BlueCell() )
+          }else{
+            grid[i].push( new RedCell() )
+          }}
       }
-      }
+    grid[blueGoalCellY][blueGoalCellX].color = Color.BLACK;
+    grid[redGoalCellY][redGoalCellX].color = Color.BLACK;
       return grid;
     }
 
@@ -99,7 +93,6 @@ const ConwayGrid = (props) => {
   const [activeColor, setActiveColor] = useState<Color>(Color.BLUE);
 
   function update(grid: Cell[][]) {
-    console.log("I'm updating!");
     for (let i = 0; i < HEIGHT; i++) {
       for (let j = 0; j < WIDTH; j++) {
         const neighbors = getNeighbors(grid, i, j);
@@ -113,13 +106,22 @@ const ConwayGrid = (props) => {
     }
   
     // update each cell depending on its neighbors
+    //I want the black cell to not turn, it the colors around it are its own.
+    //I want the black cell to turn and a popup to occur if the colors that turn it are the opponents.
+    //the black cell will always be dead, unless it gets converted to state game over. 
+    //we could make a for loop that goes through the states of all cells and if one is "gameOver", then the game ends. 
     for (let i = 0; i < HEIGHT; i++) {
       for (let j = 0; j < WIDTH; j++) {
         let cell = grid[i][j];
         if (cell.state === State.ALIVE) {
           if (cell.numAlive < 2 || cell.numAlive > 3) {
             cell.state = State.DEAD;
-            cell.color = Color.GRAY;
+            if(j<11){
+              cell.color=Color.LIGHTGRAY;
+            }
+            if(j>10){
+              cell.color=Color.GRAY;
+            }
           }
         } else {
           if (cell.numAlive === 3) {
@@ -133,29 +135,38 @@ const ConwayGrid = (props) => {
         }
       }
     }
+    //use clone to update within the function, react won't render the state if it's inside function, hence clone is used 
     const newGrid = _.clone(grid);
     setGrid(newGrid);
   };
 
   const onClick = (cell: Cell,i,j) => {
     getNeighbors(grid, i, j);
-    console.log(cell,i,j);
     if (cell.state===State.ALIVE){
       cell.state=State.DEAD;
-      cell.color=Color.GRAY;
+      if(j<11 && activeColor === Color.BLUE){
+        cell.color=Color.LIGHTGRAY;
+      }
+      if(j>10 && activeColor === Color.RED){
+        cell.color=Color.GRAY;
+      }
+    //validating that the goal square isn't changed color, preventing turning goalCell.State to ALIVE
     } else if (cell.state===State.DEAD){
+      if((i===redGoalCellY && j===redGoalCellX) || (i===blueGoalCellY && j===blueGoalCellX)){
+        console.log("you can't alter goal cell color.")
+      } else{
       cell.state=State.ALIVE;
-      cell.color=activeColor;
+      if(j<11 && activeColor === Color.BLUE){ 
+        cell.color=Color.BLUE;
+      }
+      if(j>10 && activeColor === Color.RED){
+        cell.color=Color.RED;
+      }
     }
-  //   const newCell = new Cell();
-  //   newCell.state = cell.state;
-  //   newCell.color = cell.color;
-  //   setGrid([...grid.slice(0,i),
-  //   [...grid[i].slice(0,j), cell, ...grid[i].slice(j+1)],
-  // ...grid.slice(i+1)]);
+  }
+
   const newGrid = _.clone(grid);
   setGrid(newGrid);
-    console.log('hurray, we set cell', {i,j})
   }
 
   const changeClick = (cellColor: Color) => {
@@ -173,12 +184,10 @@ const ConwayGrid = (props) => {
       <div onClick={() => {changeClick(Color.BLUE)}} style={{backgroundColor: getBgColor(Color.BLUE)}} className="blue cell"></div>
       <div onClick={() => {changeClick(Color.RED)}} style={{backgroundColor: getBgColor(Color.RED)}} className="red cell"></div>
     </div>
-    {/* TODO: ADD TOGGLE BUTTON IN THE MIDDLE OF PAGE<div></div> */}
-    {/* TODO: ADD GRID LINE IN THE MIDDLE OF THE GRID <div className="centerLine"> </div> */}
     <div className="main">
       <div className="fullGrid">
         <div className="leftGrid">
-          <Grid container spacing={1} columns={20}>
+          <Grid container spacing={1} columns={22}>
             {grid.map((row, i) => (
               row.map((cell, j) => (
               <Grid onClick={() => onClick(cell,i,j)} item xs={1} sm={1} md={1} key={`${i},${j}`} color={cell.color}>
@@ -188,9 +197,6 @@ const ConwayGrid = (props) => {
             )))}
           </Grid>
         </div>
-        {/* <div className="gap">
-          <div className="centerLine"> </div>
-        </div> */}
       </div>
     </div>
     </div>
