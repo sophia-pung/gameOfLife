@@ -21,11 +21,9 @@ more than three, no more cells will form.
 
 goal: convert the black bordered cell of oponent color to your color cell. 
 
-<div class="embed-container">
-    <iframe width="640" height="390" 
-    src="https://j.gifs.com/16Nqvq.gif" 
-    frameborder="0" allowfullscreen></iframe>
-</div>
+<p align="center">
+    <img width="1000" src="https://j.gifs.com/16Nqvq.gif" alt="Gameplay Preview">
+</p>
 
 red win demo:
 <p align="center">
