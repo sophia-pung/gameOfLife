@@ -25,7 +25,8 @@ enum Color {
 
 enum State {
   ALIVE = 'alive',
-  DEAD = 'dead'
+  DEAD = 'dead',
+  GAMEOVER = 'gameOver'
 }
 
 class BlueCell {
@@ -107,7 +108,7 @@ const ConwayGrid = (props) => {
   
     // update each cell depending on its neighbors
     //I want the black cell to not turn, it the colors around it are its own.
-    //I want the black cell to turn and a popup to occur if the colors that turn it are the opponents.
+    //I want the black cell to turn and a popup to occur if the colors that turn it are the opponents'.
     //the black cell will always be dead, unless it gets converted to state game over. 
     //we could make a for loop that goes through the states of all cells and if one is "gameOver", then the game ends. 
     for (let i = 0; i < HEIGHT; i++) {
@@ -124,12 +125,18 @@ const ConwayGrid = (props) => {
             }
           }
         } else {
-          if (cell.numAlive === 3) {
-            cell.state = State.ALIVE;
+          if (cell.numAlive === 3) { 
+            cell.state = State.ALIVE; //as long as it's not black cell
             if (cell.numBlue > cell.numRed) {
+              //if not red target cell (aka black cell on blue side)
               cell.color = Color.BLUE;
+              //if blue target cell (aka cell on red side) 
+              //popup saying game is over, blue won
             } else if (cell.numRed > cell.numBlue) {
+              //if not blue target cell (aka black cell on red side)
               cell.color = Color.RED;
+              //if red target cell (aka cell on blue side) 
+              //popup saying game is over, red won
             }
           }
         }
