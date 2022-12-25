@@ -29,10 +29,10 @@ goal: convert the black bordered cell of oponent color to your color cell.
 
 red win demo:
 <p align="center">
-    <img width="1000" src="https://github.com/sophia-pung/gameOfLife/blob/main/client/public/redWinDemo.mp4" alt="Gameplay Preview">
+    <img width="1000" src="https://github.com/sophia-pung/gameOfLife/blob/main/client/public/red.gif" alt="Gameplay Preview">
 </p>
 
 blue win demo:
 <p align="center">
-    <img width="1000" src="https://github.com/sophia-pung/gameOfLife/blob/main/client/public/blueWinDemo.mp4" alt="Gameplay Preview">
+    <img width="1000" src="https://github.com/sophia-pung/gameOfLife/blob/main/client/public/blue.gif" alt="Gameplay Preview">
 </p>
