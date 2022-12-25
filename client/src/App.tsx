@@ -20,7 +20,13 @@ enum Color {
   RED='red',
   GREEN='green',
   LIGHTGRAY='lightgray',
-  BLACK='black'
+  BLACK='black',
+  LIGHTBLUE='lightblue',
+  LIGHTRED='lightred'
+}
+
+enum Border {
+  BLACKBORDER= "black",
 }
 
 enum State {
@@ -43,6 +49,7 @@ class BlueCell {
 }
 
 class RedCell {
+  border: Border;
   color: Color;
   state: State;
   numAlive: number; // num neighbors of cell alive
@@ -85,8 +92,8 @@ const ConwayGrid = (props) => {
             grid[i].push( new RedCell() )
           }}
       }
-    grid[blueGoalCellY][blueGoalCellX].color = Color.BLACK;
-    grid[redGoalCellY][redGoalCellX].color = Color.BLACK;
+    grid[blueGoalCellY][blueGoalCellX].border = Border.BLACKBORDER;
+    grid[redGoalCellY][redGoalCellX].border = Border.BLACKBORDER;
       return grid;
     }
 
@@ -126,17 +133,27 @@ const ConwayGrid = (props) => {
           }
         } else {
           if (cell.numAlive === 3) { 
-            cell.state = State.ALIVE; //as long as it's not black cell
+            if (cell.color!==Color.BLACK) {
+              cell.state = State.ALIVE;
+            }
             if (cell.numBlue > cell.numRed) {
-              //if not red target cell (aka black cell on blue side)
-              cell.color = Color.BLUE;
-              //if blue target cell (aka cell on red side) 
-              //popup saying game is over, blue won
+              if (i===blueGoalCellY && j===blueGoalCellX) {
+                console.log("you can't flip your own color.")
+              } else if (i===redGoalCellY && j===redGoalCellX) {
+                cell.color = Color.LIGHTBLUE;
+                console.log("CONGRATS, BLUE WON!")
+              } else {
+                cell.color = Color.BLUE;
+              }
             } else if (cell.numRed > cell.numBlue) {
-              //if not blue target cell (aka black cell on red side)
-              cell.color = Color.RED;
-              //if red target cell (aka cell on blue side) 
-              //popup saying game is over, red won
+              if (i===redGoalCellY && j===redGoalCellX) {
+                console.log("you can't flip your own color.")
+              } else if (i===blueGoalCellY && j===blueGoalCellX) {
+                cell.color = Color.LIGHTRED;
+                console.log("CONGRATS, RED WON!")
+              } else {
+                cell.color = Color.RED;
+              }
             }
           }
         }
@@ -197,8 +214,8 @@ const ConwayGrid = (props) => {
           <Grid container spacing={1} columns={22}>
             {grid.map((row, i) => (
               row.map((cell, j) => (
-              <Grid onClick={() => onClick(cell,i,j)} item xs={1} sm={1} md={1} key={`${i},${j}`} color={cell.color}>
-                <Item className="cell" sx={{ border: 2 }} style={{backgroundColor: cell.color}}></Item>
+              <Grid onClick={() => onClick(cell,i,j)} item xs={1} sm={1} md={1} key={`${i},${j}`} border={cell.border} color={cell.color}>
+                <Item className="cell" sx={{ border: 2, borderColor: cell.border}} style={{backgroundColor: cell.color}}></Item>
               </Grid>
               )
             )))}
