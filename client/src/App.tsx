@@ -1,14 +1,11 @@
 import * as React from "react";
 //import the Button component from MUI
-import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Item from "@mui/material/Grid";
 import "./App.css";
-import { jsx } from "@emotion/react";
 import  {useState} from "react";
 //import _ from lodash to clone grid
 import _ from 'lodash';
-import { blue } from "@mui/material/colors";
 const HEIGHT = 11;
 const WIDTH = 22; 
 
@@ -21,8 +18,8 @@ enum Color {
   GREEN='green',
   LIGHTGRAY='lightgray',
   BLACK='black',
-  LIGHTBLUE='lightblue',
-  LIGHTRED='lightred'
+  LIGHTBLUE='purple',
+  LIGHTRED='orange'
 }
 
 enum Border {
@@ -113,11 +110,6 @@ const ConwayGrid = (props) => {
       }
     }
   
-    // update each cell depending on its neighbors
-    //I want the black cell to not turn, it the colors around it are its own.
-    //I want the black cell to turn and a popup to occur if the colors that turn it are the opponents'.
-    //the black cell will always be dead, unless it gets converted to state game over. 
-    //we could make a for loop that goes through the states of all cells and if one is "gameOver", then the game ends. 
     for (let i = 0; i < HEIGHT; i++) {
       for (let j = 0; j < WIDTH; j++) {
         let cell = grid[i][j];
@@ -137,18 +129,14 @@ const ConwayGrid = (props) => {
               cell.state = State.ALIVE;
             }
             if (cell.numBlue > cell.numRed) {
-              if (i===blueGoalCellY && j===blueGoalCellX) {
-                console.log("you can't flip your own color.")
-              } else if (i===redGoalCellY && j===redGoalCellX) {
+              if (i===redGoalCellY && j===redGoalCellX) {
                 cell.color = Color.LIGHTBLUE;
                 console.log("CONGRATS, BLUE WON!")
               } else {
                 cell.color = Color.BLUE;
               }
             } else if (cell.numRed > cell.numBlue) {
-              if (i===redGoalCellY && j===redGoalCellX) {
-                console.log("you can't flip your own color.")
-              } else if (i===blueGoalCellY && j===blueGoalCellX) {
+              if (i===blueGoalCellY && j===blueGoalCellX) {
                 cell.color = Color.LIGHTRED;
                 console.log("CONGRATS, RED WON!")
               } else {
@@ -176,16 +164,12 @@ const ConwayGrid = (props) => {
       }
     //validating that the goal square isn't changed color, preventing turning goalCell.State to ALIVE
     } else if (cell.state===State.DEAD){
-      if((i===redGoalCellY && j===redGoalCellX) || (i===blueGoalCellY && j===blueGoalCellX)){
-        console.log("you can't alter goal cell color.")
-      } else{
       cell.state=State.ALIVE;
       if(j<11 && activeColor === Color.BLUE){ 
         cell.color=Color.BLUE;
       }
       if(j>10 && activeColor === Color.RED){
         cell.color=Color.RED;
-      }
     }
   }
 
