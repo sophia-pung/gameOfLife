@@ -59,18 +59,23 @@ class RedCell {
   }
 }
 
-function getNeighbors(grid, i, j) {
-  const N = i > 0 ? grid[i - 1][j] : null;
-  const S = i < HEIGHT - 1 ? grid[i + 1][j] : null;
-  const W = j > 0 ? grid[i][j - 1] : null;
-  const E = j < WIDTH - 1 ? grid[i][j + 1] : null;
-  const NW = i > 0 && j > 0 ? grid[i - 1][j - 1] : null;
-  const NE = i > 0 && j < WIDTH - 1 ? grid[i - 1][j + 1] : null;
-  const SW = i < HEIGHT - 1 && j > 0 ? grid[i + 1][j - 1] : null;
-  const SE = i < HEIGHT - 1 && j < WIDTH - 1 ? grid[i + 1][j + 1] : null;
+function getNeighbors(i, j) {
+  const N = `(${i + 1},${j})`; 
+  const S = `(${i - 1},${j})`;
+  const W = `(${i},${j - 1})`;
+  const E = `(${i},${j + 1})`;
+  const NW = `(${i + 1},${j - 1})`;
+  const NE = `(${i + 1},${j + 1})`;
+  const SW = `(${i - 1},${j - 1})`;
+  const SE = `(${i - 1},${j + 1})`;
   const neighbors = [N, S, W, E, NW, NE, SW, SE];
-  return neighbors.filter((neighbor) => neighbor !== null);
+  return neighbors;
 }
+
+console.log("getNeighbors", getNeighbors(1, 2));
+const aliveCellList = [(1, 2), (1, 3), (2, 3)]
+
+
 
 const ConwayGrid = (props) => {
   const blueGoalCellY = 5; //5, 2
