@@ -73,9 +73,16 @@ function getNeighbors(i, j) {
 }
 
 console.log("getNeighbors", getNeighbors(1, 2));
-const aliveCellList = [(1, 2), (1, 3), (2, 3)]
-
-
+let aliveNeighbors: string[] = [];
+const aliveCellList = [[1, 2], [1, 3], [2, 3]];
+for (let cell = 0; cell < aliveCellList.length; cell++) {
+  const [i, j] = aliveCellList[cell];
+  console.log("i, j", i, j)
+  const neighbors = getNeighbors(i, j);
+  aliveNeighbors = aliveNeighbors.concat(neighbors);
+  console.log("AN", aliveNeighbors)
+}
+console.log("aliveNeighbors", aliveNeighbors);
 
 const ConwayGrid = (props) => {
   const blueGoalCellY = 5; //5, 2
