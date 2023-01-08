@@ -59,6 +59,9 @@ class RedCell {
   }
 }
 
+//TODO: import CSV of aliveCellList, import the aliveCellList as format [1, 2], [1, 3], [2, 3]...];
+const aliveCellsList = [[1, 2], [1, 3], [2, 3]];
+
 function getNeighbors(i, j) {
   const N = `(${i + 1},${j})`; 
   const S = `(${i - 1},${j})`;
@@ -72,17 +75,41 @@ function getNeighbors(i, j) {
   return neighbors;
 }
 
-console.log("getNeighbors", getNeighbors(1, 2));
+//aliveListNeighbors concatenates the neighbors and the alive cells, for and accurate dictionary creation
+function aliveListNeighbors(aliveCellList){
 let aliveNeighbors: string[] = [];
-const aliveCellList = [[1, 2], [1, 3], [2, 3]];
-for (let cell = 0; cell < aliveCellList.length; cell++) {
-  const [i, j] = aliveCellList[cell];
-  console.log("i, j", i, j)
-  const neighbors = getNeighbors(i, j);
-  aliveNeighbors = aliveNeighbors.concat(neighbors);
-  console.log("AN", aliveNeighbors)
+  for (let cell = 0; cell < aliveCellList.length; cell++) {
+    const [i, j] = aliveCellList[cell];
+    const neighbors = getNeighbors(i, j);
+    aliveNeighbors = aliveNeighbors.concat(neighbors);
+  }
+  return aliveNeighbors
 }
-console.log("aliveNeighbors", aliveNeighbors);
+
+//getAliveCells gets the cells that either 1) have three neighbors, or 2) has four neighbors AND is alive
+function getAliveCells(cellDictionary: { [key: string]: number }, aliveCellList: number[][]) {
+  return Object.keys(cellDictionary).filter((cell) => {
+    const count = cellDictionary[cell];
+    return count === 3 || (count === 4 && aliveCellList.some(([i, j]) => i === Number(cell[1]) && j === Number(cell[3])));
+  });
+}
+
+//countDuplicates loops through the dictionary of the list of aliveNeighbors (and alive cells) and references the alive cell list for "has four neighbors AND is alive" check
+function countDuplicates(coordinates: string[], aliveCellList: number[][]) {
+  const cellDictionary: { [key: string]: number } = {};
+  for (const coord of coordinates) {
+    cellDictionary[coord] = (cellDictionary[coord] || 0) + 1;
+  }
+  for (const cell of aliveCellList) {
+    const coord = `(${cell[0]},${cell[1]})`;
+    cellDictionary[coord] = (cellDictionary[coord] || 0) + 1;
+  }
+  return getAliveCells(cellDictionary, aliveCellList);
+}
+
+//TODO: convert/translation- shift (0,0) from top left, to middle 
+//floor
+//timeout and live cells, timout for how many steps the game can take before ending
 
 const ConwayGrid = (props) => {
   const blueGoalCellY = 5; //5, 2
@@ -196,6 +223,8 @@ const ConwayGrid = (props) => {
   const getBgColor = (cellColor: Color) => {
     return cellColor === activeColor ? cellColor : Color.GRAY;
   }
+
+  //shadow renders, 
 
   return (
     <div className="outer">
